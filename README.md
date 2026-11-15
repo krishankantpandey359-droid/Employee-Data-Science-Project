@@ -1,138 +1,68 @@
 # Employee Data Science Project
 
-## 📌 Project Overview
+## Project overview
 
-This project focuses on analysing an **Employee Dataset** using Python and basic Data Science techniques.
+A beginner-level exploratory data analysis (EDA) project using Python. It inspects a small employee-style dataset, checks data quality, summarises variables and explores descriptive relationships.
 
-The main purpose of the project is to understand the structure of employee data, clean the dataset, explore patterns, create visualisations and generate useful observations from the available information.
+This repository does not contain a machine-learning prediction model.
 
-## 🎯 Objectives
+## Dataset
 
-- Understand the employee dataset
-- Inspect rows, columns and data types
-- Check and handle missing values
-- Identify duplicate records
-- Perform basic data cleaning
-- Conduct Exploratory Data Analysis (EDA)
-- Analyse numerical and categorical variables
-- Create meaningful visualisations
-- Study relationships between numerical variables
-- Summarise the major findings
+The supplied CSV contains 50 records and six columns:
 
-## 📊 Dataset Information
+- `id`: record identifier
+- `groups`: categorical group label
+- `age`: age value
+- `healthy_eating`: numeric score, scale not documented
+- `active_lifestyle`: numeric score, scale not documented
+- `salary`: numeric value, currency/unit not documented
 
-- **Number of rows:** 50
-- **Number of columns:** 6
-- **Missing values:** 0
-- **Duplicate rows before cleaning:** 0
+The original data source, sampling method, salary unit, group definitions and score scales are not provided. Treat all findings as descriptive patterns in this sample, not as representative workforce statistics.
 
-### Dataset Columns
+The notebook embeds a copy of the CSV for convenient execution without uploading a separate file. The repository also contains `Employee Dataset.csv`. Keep both copies synchronized when updating the dataset.
 
-- `id`
-- `groups`
-- `age`
-- `healthy_eating`
-- `active_lifestyle`
-- `salary`
+## Analysis workflow
 
-## 🛠️ Technologies Used
+1. Load the embedded dataset.
+2. Inspect shape, columns and data types.
+3. Validate required fields and numeric values.
+4. Check missing values, duplicate rows and ID uniqueness.
+5. Generate descriptive statistics.
+6. Plot distributions for measured numeric fields, excluding the ID.
+7. Visualise the categorical group field.
+8. Examine correlations among measured numeric fields.
+9. Summarise the sample and document limitations.
 
-- Python
-- Pandas
-- NumPy
-- Matplotlib
-- Seaborn
-- Jupyter Notebook / Google Colab
+## Main sample observations
 
-## 🔍 Project Workflow
+- 50 records and 6 columns.
+- No missing values or exact duplicate rows in the supplied data.
+- Four distinct values in the `groups` column.
+- Mean age: 31.88.
+- Mean healthy_eating score: 4.92.
+- Mean active_lifestyle score: 5.90.
+- Mean salary value: 2,027.50, unit not supplied.
 
-### 1. Data Loading
-The employee dataset is loaded using Pandas.
+The sample correlation between `healthy_eating` and `salary` is approximately 0.76. Correlation does not establish causation. The identifier is excluded from descriptive numeric analysis because it is not a measured attribute.
 
-### 2. Data Inspection
-The project checks the dataset shape, column names, data types and sample records.
+## Run the notebook
 
-### 3. Data Cleaning
-The dataset is checked for missing values and duplicate records. Column names are also standardised for easier analysis.
+Open `Employee_Data_Science_Project_FINAL (1).ipynb` in Jupyter, JupyterLab or Google Colab. Run all cells from top to bottom.
 
-### 4. Exploratory Data Analysis
-Numerical and categorical variables are explored using descriptive statistics and visualisations.
-
-### 5. Data Visualisation
-Charts such as histograms, count plots, box plots and correlation heatmaps are used to understand the data.
-
-### 6. Correlation Analysis
-Correlation between available numerical variables is examined to understand possible relationships.
-
-### 7. Findings and Conclusion
-The project summarises the important observations obtained from the analysis.
-
-## 📈 Visualisations Included
-
-The notebook generates visualisations for the available variables, including:
-
-- Numerical variable distributions
-- Categorical variable distributions
-- Box plots where applicable
-- Correlation heatmap
-- Relationship plots where applicable
-
-## 📁 Project Files
-
-```text
-Employee-Data-Science-Project/
-│
-├── Employee_Data_Science_Project_FINAL (1).ipynb
-├── Employee Dataset.csv
-└── README.md
-```
-
-## ▶️ How to Run the Project
-
-### Google Colab
-
-1. Open Google Colab.
-2. Upload `Employee_Data_Science_Project_FINAL (1).ipynb`.
-3. Open the notebook.
-4. Run the cells from top to bottom using **Runtime → Run all**.
-
-The notebook contains the dataset internally, so the analysis can be run without separately loading the CSV.
-
-### Jupyter Notebook
-
-Install the required libraries:
+Install dependencies:
 
 ```bash
-pip install pandas numpy matplotlib seaborn
+python -m pip install pandas numpy matplotlib seaborn jupyter nbconvert
 ```
 
-Then open the `.ipynb` file in Jupyter Notebook or JupyterLab.
+## Limitations and future improvements
 
-## 💡 Key Learning Outcomes
+- Add the original dataset source and data dictionary.
+- Document the salary unit and scoring scales.
+- Explain what the `groups` labels represent.
+- Use a larger, documented and appropriately sampled dataset before making workforce-level claims.
+- Define a valid prediction question and evaluation design before adding machine learning.
 
-Through this project, I learned how to:
+## Author
 
-- Work with a real-world style dataset
-- Use Pandas for data analysis
-- Perform basic data cleaning
-- Understand numerical and categorical data
-- Create data visualisations
-- Interpret statistical summaries
-- Analyse correlations
-- Follow a basic Data Science workflow
-
-## 📝 Conclusion
-
-This project demonstrates a complete beginner-level Data Science workflow using employee data. Starting from data inspection and cleaning, the project moves towards exploratory analysis, visualisation and interpretation.
-
-The project can be further extended with feature engineering, advanced statistical analysis and machine learning when a suitable prediction problem and target variable are available.
-
----
-
-### 👩‍💻 Project Author
-
-**Srishti Pandey**
-
-MCA Data Science Student
-
-**Project:** Employee Data Analysis
+Srishti Pandey, MCA Data Science
