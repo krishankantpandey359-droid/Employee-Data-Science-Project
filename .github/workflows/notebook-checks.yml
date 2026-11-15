@@ -1,0 +1,33 @@
+name: Employee notebook execution checks
+
+on:
+  push:
+    branches: ["main", "audit/**"]
+  pull_request:
+
+jobs:
+  execute-notebook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas numpy matplotlib seaborn jupyter nbconvert nbformat
+      - name: Execute complete notebook
+        run: jupyter nbconvert --to notebook --execute "Employee_Data_Science_Project_FINAL (1).ipynb" --output executed_employee.ipynb --ExecutePreprocessor.timeout=600
+      - name: Verify outputs and errors
+        run: |
+          python - <<'PY'
+          import nbformat
+          from pathlib import Path
+          nb = nbformat.read(Path("executed_employee.ipynb"), as_version=4)
+          cells = [c for c in nb.cells if c.cell_type == "code" and c.source.strip()]
+          assert cells and all(c.execution_count is not None for c in cells)
+          errors = [(i,o.ename,o.evalue) for i,c in enumerate(nb.cells) if c.cell_type == "code" for o in c.get("outputs",[]) if o.output_type == "error"]
+          assert not errors, errors
+          assert any(o.output_type in {"display_data","execute_result"} for c in cells for o in c.get("outputs",[]))
+          print(f"Executed {len(cells)} code cells without errors.")
+          PY
