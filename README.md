@@ -8,6 +8,8 @@ This repository does not contain a machine-learning prediction model.
 
 ## Dataset
 
+The notebook reads the committed `Employee Dataset.csv` file directly. The CSV is the single source of truth, avoiding a separate embedded copy inside the notebook.
+
 The supplied CSV contains 50 records and six columns:
 
 - `id`: record identifier
@@ -19,11 +21,9 @@ The supplied CSV contains 50 records and six columns:
 
 The original data source, sampling method, salary unit, group definitions and score scales are not provided. Treat all findings as descriptive patterns in this sample, not as representative workforce statistics.
 
-The notebook embeds a copy of the CSV for convenient execution without uploading a separate file. The repository also contains `Employee Dataset.csv`. Keep both copies synchronized when updating the dataset.
-
 ## Analysis workflow
 
-1. Load the embedded dataset.
+1. Load the committed CSV.
 2. Inspect shape, columns and data types.
 3. Validate required fields and numeric values.
 4. Check missing values, duplicate rows and ID uniqueness.
@@ -47,13 +47,14 @@ The sample correlation between `healthy_eating` and `salary` is approximately 0.
 
 ## Run the notebook
 
-Open `Employee_Data_Science_Project_FINAL (1).ipynb` in Jupyter, JupyterLab or Google Colab. Run all cells from top to bottom.
-
-Install dependencies:
+Run from the repository root so the notebook can find `Employee Dataset.csv`.
 
 ```bash
 python -m pip install pandas numpy matplotlib seaborn jupyter nbconvert
+jupyter notebook "Employee_Data_Science_Project_FINAL (1).ipynb"
 ```
+
+Open the notebook and run all cells from top to bottom. The notebook reports a clear error if the CSV is missing from the working directory.
 
 ## Limitations and future improvements
 
