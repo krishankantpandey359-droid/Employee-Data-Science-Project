@@ -82,7 +82,7 @@ The notebook generates visualisations for the available variables, including:
 ```text
 Employee-Data-Science-Project/
 │
-├── Employee_Data_Science_Project_FINAL.ipynb
+├── Employee_Data_Science_Project_FINAL (1).ipynb
 ├── Employee Dataset.csv
 └── README.md
 ```
@@ -92,7 +92,7 @@ Employee-Data-Science-Project/
 ### Google Colab
 
 1. Open Google Colab.
-2. Upload `Employee_Data_Science_Project_FINAL.ipynb`.
+2. Upload `Employee_Data_Science_Project_FINAL (1).ipynb`.
 3. Open the notebook.
 4. Run the cells from top to bottom using **Runtime → Run all**.
 
