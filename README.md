@@ -50,7 +50,8 @@ The sample correlation between `healthy_eating` and `salary` is approximately 0.
 Run from the repository root so the notebook can find `Employee Dataset.csv`.
 
 ```bash
-python -m pip install pandas numpy matplotlib seaborn jupyter nbconvert
+python -m pip install pandas numpy matplotlib seaborn jupyter nbconvert pytest
+python -m pytest -q
 jupyter notebook "Employee_Data_Science_Project_FINAL (1).ipynb"
 ```
 
