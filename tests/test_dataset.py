@@ -92,3 +92,23 @@ def test_validator_does_not_mutate_input():
     original = df.copy(deep=True)
     validate_employee_data(df)
     pd.testing.assert_frame_equal(df, original)
+
+
+from src.employee_data import summarize_employee_sample
+
+
+def test_sample_summary_is_unit_neutral_and_complete():
+    result = summarize_employee_sample(load_data())
+    assert result["record_count"] == 50
+    assert sum(result["group_counts"].values()) == 50
+    assert set(result["numeric_summary"]) == {
+        "age", "healthy_eating", "active_lifestyle", "salary"
+    }
+    assert "do not establish causation" in result["interpretation_note"]
+
+
+def test_sample_summary_rejects_invalid_input():
+    df = load_data()
+    df.loc[0, "age"] = 0
+    with pytest.raises(ValueError, match="Age"):
+        summarize_employee_sample(df)
