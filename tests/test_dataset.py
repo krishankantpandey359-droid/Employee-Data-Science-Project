@@ -112,3 +112,13 @@ def test_sample_summary_rejects_invalid_input():
     df.loc[0, "age"] = 0
     with pytest.raises(ValueError, match="Age"):
         summarize_employee_sample(df)
+
+
+def test_sample_summary_normalizes_group_label_whitespace():
+    df = load_data()
+    original_a_count = int(df["groups"].eq("A").sum())
+    df.loc[0, "groups"] = " A "
+    result = summarize_employee_sample(df)
+    assert result["group_counts"]["A"] == original_a_count
+    assert sum(result["group_counts"].values()) == len(df)
+
