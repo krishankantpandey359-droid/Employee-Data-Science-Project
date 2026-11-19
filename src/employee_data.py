@@ -36,3 +36,27 @@ def validate_employee_data(frame: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("Salary values must not be negative.")
 
     return frame
+
+
+def summarize_employee_sample(frame: pd.DataFrame) -> dict:
+    """Return unit-neutral descriptive summaries without causal claims."""
+    validate_employee_data(frame)
+    numeric = frame[["age", "healthy_eating", "active_lifestyle", "salary"]].apply(
+        pd.to_numeric, errors="raise"
+    )
+    return {
+        "record_count": int(len(frame)),
+        "group_counts": {
+            str(key): int(value)
+            for key, value in frame["groups"].value_counts(dropna=False).sort_index().items()
+        },
+        "numeric_summary": numeric.describe(
+            percentiles=[0.25, 0.5, 0.75]
+        ).round(3).to_dict(),
+        "correlations": numeric.corr(method="spearman").round(4).to_dict(),
+        "interpretation_note": (
+            "Descriptive statistics for this supplied sample only. "
+            "Salary units, group meanings, and score scales are undocumented. "
+            "Correlations do not establish causation."
+        ),
+    }
