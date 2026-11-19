@@ -1,4 +1,4 @@
-name: Employee notebook execution checks
+name: Employee analytics validation
 
 on:
   push:
@@ -6,40 +6,87 @@ on:
   pull_request:
 
 jobs:
-  execute-notebook:
+  validate-and-execute:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip pandas numpy matplotlib seaborn jupyter nbconvert nbformat
-      - name: Run dataset integrity tests
+          cache: "pip"
+
+      - name: Install project dependencies
         run: |
-          python -m pip install pytest
-          python -m pytest -q
-      - name: Execute complete notebook
-        run: jupyter nbconvert --to notebook --execute "Employee_Data_Science_Project_FINAL (1).ipynb" --output executed_employee.ipynb --ExecutePreprocessor.timeout=600
-      - name: Verify outputs and errors
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run tests for both datasets, SQL, and generated outputs
+        run: python -m pytest -q
+
+      - name: Execute primary IBM HR Attrition notebook
+        run: |
+          jupyter nbconvert --to notebook --execute IBM_HR_Attrition_Analysis.ipynb \
+            --output executed_ibm_hr.ipynb --ExecutePreprocessor.timeout=600
+
+      - name: Execute supplementary 50-row EDA notebook
+        run: |
+          jupyter nbconvert --to notebook --execute "Employee_Data_Science_Project_FINAL (1).ipynb" \
+            --output executed_employee_sample.ipynb --ExecutePreprocessor.timeout=600
+
+      - name: Run primary analysis script
+        run: python scripts/analyze_ibm_hr.py
+
+      - name: Verify both notebook outputs and generated analysis files
         run: |
           python - <<'PY'
-          import nbformat
+          import json
           from pathlib import Path
-          nb = nbformat.read(Path("executed_employee.ipynb"), as_version=4)
-          cells = [c for c in nb.cells if c.cell_type == "code" and c.source.strip()]
-          assert cells and all(c.execution_count is not None for c in cells)
-          errors = [(i,o.ename,o.evalue) for i,c in enumerate(nb.cells) if c.cell_type == "code" for o in c.get("outputs",[]) if o.output_type == "error"]
-          assert not errors, errors
-          assert any(o.output_type in {"display_data","execute_result"} for c in cells for o in c.get("outputs",[]))
-          print(f"Executed {len(cells)} code cells without errors.")
+          import nbformat
+
+          for filename in ("executed_ibm_hr.ipynb", "executed_employee_sample.ipynb"):
+              notebook = nbformat.read(Path(filename), as_version=4)
+              code_cells = [cell for cell in notebook.cells if cell.cell_type == "code" and cell.source.strip()]
+              assert code_cells, f"No code cells found in {filename}"
+              assert all(cell.execution_count is not None for cell in code_cells), f"Unexecuted code cell in {filename}"
+              errors = [
+                  (index, output.ename, output.evalue)
+                  for index, cell in enumerate(notebook.cells)
+                  if cell.cell_type == "code"
+                  for output in cell.get("outputs", [])
+                  if output.output_type == "error"
+              ]
+              assert not errors, (filename, errors)
+              print(f"{filename}: executed {len(code_cells)} code cells without errors")
+
+          output_dir = Path("outputs")
+          report = json.loads((output_dir / "attrition_summary.json").read_text(encoding="utf-8"))
+          assert report["records"] == 1470
+          assert report["fields"] == 35
+          expected = [
+              "by_department.csv",
+              "by_job_role.csv",
+              "by_overtime.csv",
+              "by_job_satisfaction_code.csv",
+              "by_income_quartile.csv",
+              "attrition_overall.png",
+              "attrition_by_department.png",
+              "attrition_by_income_quartile.png",
+          ]
+          for name in expected:
+              file = output_dir / name
+              assert file.is_file() and file.stat().st_size > 0, f"Missing or empty output: {name}"
+          print("IBM report JSON, CSV tables, and charts verified.")
           PY
 
-      - name: Preserve executed notebook as a build artifact
+      - name: Preserve executed notebooks and reports
         uses: actions/upload-artifact@v4
         with:
-          name: employee-executed-notebook
-          path: executed_employee.ipynb
+          name: employee-analytics-execution-artifacts
+          path: |
+            executed_ibm_hr.ipynb
+            executed_employee_sample.ipynb
+            outputs/
           if-no-files-found: error
           retention-days: 14
