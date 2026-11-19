@@ -28,6 +28,12 @@ Source, license notes, and field definitions: [Dataset provenance and data dicti
 
 These are descriptive comparisons. They do not demonstrate causes or justify decisions about real employees.
 
+### Verified benchmark findings
+
+The CI-verified descriptive results are recorded in [reports/IBM_HR_Attrition_Findings.md](reports/IBM_HR_Attrition_Findings.md). They include attrition share by department, overtime, and sample-defined income quartile, with counts and interpretation limits.
+
+The successful [GitHub Actions execution run from 19 November 2026](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/44581146384) contains an artifact with the executed primary and supplementary notebooks plus generated CSV, JSON, and PNG reports. The artifact follows GitHub's 14-day retention policy.
+
 ### Primary analysis files
 
 - `IBM_HR_Attrition_Analysis.ipynb`: main, reproducible EDA notebook.
