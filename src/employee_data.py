@@ -66,17 +66,17 @@ def summarize_employee_sample(frame: pd.DataFrame) -> dict:
     grouped = normalized.groupby("_group", observed=True)[MEASURE_COLUMNS].agg(
         ["count", "mean", "median", "std"]
     ).round(3)
-    group_summary = {
-        str(group): {
-            metric: {
-                statistic: (None if pd.isna(value) else round(float(value), 3))
-                for statistic, value in statistics.items()
+    group_summary = {}
+    for group, row in grouped.iterrows():
+        group_summary[str(group)] = {}
+        for metric in MEASURE_COLUMNS:
+            group_summary[str(group)][metric] = {
+                statistic: (
+                    None if pd.isna(row[(metric, statistic)])
+                    else round(float(row[(metric, statistic)]), 3)
+                )
+                for statistic in ("count", "mean", "median", "std")
             }
-            for metric, statistics in metrics.items()
-        }
-        for group, metrics in grouped.groupby(level=0, axis=1)
-        for metric, statistics in metrics.items()
-    }
 
     group_counts = group_labels.value_counts(dropna=False).sort_index()
     return {
