@@ -31,7 +31,7 @@ The original data source, sampling method, salary unit, group definitions and sc
 6. Plot distributions for measured numeric fields, excluding the ID.
 7. Visualise the categorical group field.
 8. Examine correlations among measured numeric fields.
-9. Compare descriptive averages and record counts across the four supplied group labels.
+9. Compare record counts and descriptive averages across the supplied group labels.
 10. Summarise the sample and document limitations.
 
 ## Main sample observations
@@ -45,6 +45,10 @@ The original data source, sampling method, salary unit, group definitions and sc
 - Mean salary value: 2,027.50, unit not supplied.
 
 The sample correlation between `healthy_eating` and `salary` is approximately 0.76. Correlation does not establish causation. The identifier is excluded from descriptive numeric analysis because it is not a measured attribute.
+
+### Group-level summary
+
+The notebook compares record counts and mean age, lifestyle scores and salary values for each supplied group label. These are descriptive sample summaries only. The dataset does not define what the group labels mean or specify the salary unit, so the table must not be interpreted as a fair-pay comparison or a population-level finding.
 
 ## Run the notebook
 
