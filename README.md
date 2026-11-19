@@ -1,60 +1,101 @@
-# Employee Data Science Project
+# Employee Attrition and Workforce EDA Portfolio Project
 
 ## Project overview
 
-A beginner-level exploratory data analysis (EDA) project using Python. It inspects a small employee-style dataset, checks data quality, summarizes variables and explores descriptive relationships.
+This repository contains two separate analysis tracks:
 
-This repository does not contain a machine-learning prediction model.
+1. Primary: IBM HR Analytics Attrition benchmark, with 1,470 records and 35 fields. This is the main HR analytics project.
+2. Supplementary: the original 50-record employee-style sample and its beginner EDA notebook. This sample is retained unchanged as a separate exercise.
 
-## Dataset
+The IBM benchmark is a static teaching dataset. It is not a live company dataset and does not represent a current workforce.
 
-The committed `Employee Dataset.csv` contains 50 records and six columns:
+## Primary project: IBM HR Attrition benchmark
 
-- `id`: record identifier
-- `groups`: categorical group label
-- `age`: age value
-- `healthy_eating`: numeric score, scale not documented
-- `active_lifestyle`: numeric score, scale not documented
-- `salary`: numeric value, currency/unit not documented
+Dataset: `data/raw/ibm_hr_attrition.csv`  
+Rows: 1,470  
+Columns: 35  
+Target: `Attrition` (Yes/No)
 
-The original data source, sampling method, salary unit, group definitions and score scales are not provided. Treat all findings as descriptive patterns in this sample, not as representative workforce statistics.
+Source, license notes, and field definitions: [Dataset provenance and data dictionary](docs/DATASET_PROVENANCE.md).
 
-## Analysis workflow
+### Business questions
 
-1. Load and validate the committed CSV.
-2. Inspect shape, columns, data types, missing values and duplicate rows.
-3. Summarize measured numeric fields, excluding the record identifier.
-4. Compare group counts and group-wise count, mean, median and standard deviation.
-5. Calculate Spearman rank correlations among measured numeric fields.
-6. Flag potential 1.5-IQR outliers for review without deleting records.
-7. Document the sample limitations and avoid causal or population-level claims.
+- What is the attrition share in the supplied benchmark sample?
+- How does attrition share vary by department and job role?
+- How does it differ between overtime categories?
+- How do job-satisfaction code groups compare?
+- How does it vary across sample income quartiles?
 
-## Reusable analysis
+These are descriptive comparisons. They do not demonstrate causes or justify decisions about real employees.
 
-`src/employee_data.py` provides:
+### Primary analysis files
 
-- `validate_employee_data(frame)`: checks schema, missing/non-finite values, unique IDs, positive ages and non-negative salary values.
-- `summarize_employee_sample(frame)`: returns overall statistics, group-wise summaries, Spearman correlations and IQR review flags.
+- `IBM_HR_Attrition_Analysis.ipynb`: main, reproducible EDA notebook.
+- `src/ibm_hr_data.py`: schema validation and reusable summaries.
+- `scripts/analyze_ibm_hr.py`: command-line script that produces CSV, JSON, and chart outputs.
+- `sql/employee_attrition_analysis.sql`: five SQLite business-analysis queries.
+- `tests/test_ibm_hr_data.py`: tests for the 1,470-row benchmark dataset.
 
-IQR flags identify observations for inspection. They do not establish that a record is wrong, and no record is automatically removed.
-
-## Run locally
+Run the primary notebook from the repository root:
 
 ```bash
-python -m pip install pandas numpy matplotlib seaborn jupyter nbconvert pytest
-python -m pytest -q
+jupyter notebook IBM_HR_Attrition_Analysis.ipynb
+```
+
+Run the reproducible analysis script:
+
+```bash
+python scripts/analyze_ibm_hr.py
+```
+
+Outputs are written to `outputs/`.
+
+### Run SQL locally
+
+With SQLite installed:
+
+```bash
+sqlite3 employee_attrition.db
+```
+
+Inside SQLite:
+
+```sql
+.mode csv
+.import --skip 1 data/raw/ibm_hr_attrition.csv employee_attrition
+.read sql/employee_attrition_analysis.sql
+```
+
+If your SQLite version does not support `--skip 1`, import the CSV with a CSV-aware tool or a short Python import script. Confirm that the resulting table has 1,470 records and 35 columns before running the queries.
+
+## Supplementary project: original 50-row employee-style sample
+
+The original `Employee Dataset.csv` and `Employee_Data_Science_Project_FINAL (1).ipynb` remain as a separate beginner-level EDA exercise.
+
+This sample contains 50 records and six fields: `id`, `groups`, `age`, `healthy_eating`, `active_lifestyle`, and `salary`. Its source, sampling method, salary unit, group meanings and score scales are undocumented. Interpret it only as a supplied exercise sample.
+
+The existing `src/employee_data.py` module is specific to this six-column sample. It does not validate the IBM benchmark. The IBM-specific logic is kept separately in `src/ibm_hr_data.py`.
+
+Run the supplementary notebook from the repository root:
+
+```bash
 jupyter notebook "Employee_Data_Science_Project_FINAL (1).ipynb"
 ```
 
-Run the notebook from the repository root so it can locate the CSV.
+## Setup and tests
 
-## Limitations and future improvements
+```bash
+python -m pip install -r requirements.txt
+python -m pytest -q
+```
 
-- Add the original dataset source and a data dictionary.
-- Document salary units and lifestyle score scales.
-- Explain the supplied group labels.
-- Use a larger, documented and appropriately sampled dataset before making workforce-level claims.
-- Define a valid prediction question and evaluation design before adding machine learning.
+The GitHub Actions workflow runs both datasets' tests, executes both notebooks, runs the primary analysis script, and preserves executed notebook and analysis outputs as workflow artifacts.
+
+## Dataset provenance and responsible use
+
+The IBM source repository's README lists separate Open Database License (ODbL) and Database Contents License (DbCL) terms for the dataset. Its Apache-2.0 code license is separate from the data terms. Review the upstream terms before redistributing the dataset or derived database. See [docs/DATASET_PROVENANCE.md](docs/DATASET_PROVENANCE.md).
+
+The source data is synthetic/static benchmark data. Results describe this dataset only. They do not estimate a current employer's attrition rate. Satisfaction code labels and monetary units are not fully documented. Do not invent their meanings. Do not use these results or any future model to make real hiring, promotion, compensation, or termination decisions.
 
 ## Author
 
