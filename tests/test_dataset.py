@@ -53,3 +53,42 @@ def test_dataset_is_not_modified_by_loader():
     before = load_data()
     after = load_data()
     pd.testing.assert_frame_equal(before, after)
+
+
+from src.employee_data import validate_employee_data
+
+
+def test_validator_accepts_repository_dataset():
+    assert validate_employee_data(load_data()).shape == (50, 6)
+
+
+@pytest.mark.parametrize(
+    ("column", "value", "message"),
+    [
+        ("age", 0, "Age"),
+        ("salary", -1, "Salary"),
+        ("groups", "   ", "blank"),
+        ("age", "not-a-number", "non-numeric"),
+        ("salary", float("inf"), "non-finite"),
+    ],
+)
+def test_validator_rejects_invalid_values(column, value, message):
+    df = load_data()
+    df[column] = df[column].astype(object)
+    df.loc[0, column] = value
+    with pytest.raises(ValueError, match=message):
+        validate_employee_data(df)
+
+
+def test_validator_rejects_duplicate_ids():
+    df = load_data()
+    df.loc[1, "id"] = df.loc[0, "id"]
+    with pytest.raises(ValueError, match="unique"):
+        validate_employee_data(df)
+
+
+def test_validator_does_not_mutate_input():
+    df = load_data()
+    original = df.copy(deep=True)
+    validate_employee_data(df)
+    pd.testing.assert_frame_equal(df, original)
