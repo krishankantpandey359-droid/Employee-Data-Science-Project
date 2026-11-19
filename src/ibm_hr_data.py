@@ -101,15 +101,18 @@ def income_quartile_attrition(frame: pd.DataFrame) -> pd.DataFrame:
         result["MonthlyIncome"], q=4, labels=False, duplicates="drop"
     )
     actual_quartiles = int(quartile_codes.nunique(dropna=True))
-    quartile_names = {
-        code: (
-            "Q1 (lowest)" if code == 0 else
-            "Q4 (highest)" if code == actual_quartiles - 1 else
-            f"Q{code + 1}"
-        )
-        for code in range(actual_quartiles)
-    }
-    result["income_quartile"] = quartile_codes.map(quartile_names)
+    if actual_quartiles == 0:
+        result["income_quartile"] = "Single income value"
+    else:
+        quartile_names = {
+            code: (
+                f"Q{code + 1} (lowest)" if code == 0 else
+                f"Q{code + 1} (highest)" if code == actual_quartiles - 1 else
+                f"Q{code + 1}"
+            )
+            for code in range(actual_quartiles)
+        }
+        result["income_quartile"] = quartile_codes.map(quartile_names)
     grouped = result.groupby("income_quartile", observed=True).agg(
         records=("Attrition", "size"),
         attrition_records=("Attrition", lambda values: int(values.eq("Yes").sum())),
