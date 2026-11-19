@@ -1,6 +1,6 @@
 -- SQLite starter analysis for the IBM HR Attrition benchmark.
 -- Import data/raw/ibm_hr_attrition.csv into a table named employee_attrition first.
--- Example (sqlite3 CLI): .mode csv / .import --skip 1 data/raw/ibm_hr_attrition.csv employee_attrition
+-- Import the CSV into SQLite with pandas DataFrame.to_sql before running these SELECT statements.
 -- Dataset fields and source limitations: docs/DATASET_PROVENANCE.md
 
 -- 1. Overall attrition count and rate in this static benchmark sample.
@@ -38,7 +38,7 @@ FROM employee_attrition
 GROUP BY JobSatisfaction
 ORDER BY JobSatisfaction;
 
--- 5. Compare median-like income groups with explicit sample quartile boundaries.
+-- 5. Compare sample income quartiles. These are sample-defined groups, not market salary bands.
 WITH income_bands AS (
     SELECT *,
         NTILE(4) OVER (ORDER BY MonthlyIncome) AS income_quartile
@@ -52,5 +52,5 @@ FROM income_bands
 GROUP BY income_quartile
 ORDER BY income_quartile;
 
--- Caution: these are descriptive associations in a static, synthetic benchmark.
+-- Caution: these are descriptive associations in a static public benchmark.
 -- They do not establish causes, current workforce rates, or actionable employment rules.
