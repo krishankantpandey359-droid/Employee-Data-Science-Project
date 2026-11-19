@@ -73,3 +73,12 @@ Open the notebook and run all cells from top to bottom. The notebook reports a c
 ## Author
 
 Srishti Pandey, MCA Data Science
+
+
+## Group-level descriptive comparison
+
+The notebook compares record counts and mean age, healthy-eating score, active-lifestyle score and salary value for each supplied group label. These are descriptive sample summaries only. The dataset does not define the group labels or salary unit, so the results are not a fair-pay comparison or population-level finding.
+
+## Validation implementation
+
+The reusable validator in `src/employee_data.py` checks the exact six-column schema, missing and non-finite values, unique IDs, positive ages and non-negative salary values. The test suite includes invalid-value and non-mutation checks. It deliberately does not impose score ranges because the source does not document their scales.
