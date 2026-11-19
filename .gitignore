@@ -1,0 +1,9 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Generated reports and executed notebooks
+outputs/
+executed_*.ipynb
