@@ -102,3 +102,55 @@ def test_analysis_summary_does_not_modify_source_frame():
     original = frame.copy(deep=True)
     summarize_attrition(frame)
     pd.testing.assert_frame_equal(frame, original)
+
+
+
+def test_income_quartiles_handle_all_tied_values():
+    frame = load_ibm_hr_data(DATA)
+    frame["MonthlyIncome"] = 5000
+    result = income_quartile_attrition(frame)
+    assert result["records"].sum() == len(frame)
+    assert result["income_quartile"].tolist() == ["Single income value"]
+
+
+def test_grouped_attrition_rejects_unknown_grouping_column():
+    frame = load_ibm_hr_data(DATA)
+    with pytest.raises(ValueError, match="Unknown grouping column"):
+        grouped_attrition(frame, "NotARealField")
+
+
+def test_sql_queries_execute_against_imported_benchmark(tmp_path):
+    import sqlite3
+
+    sql_path = Path(__file__).resolve().parents[1] / "sql" / "employee_attrition_analysis.sql"
+    frame = load_ibm_hr_data(DATA)
+    database = tmp_path / "test_employee.db"
+    with sqlite3.connect(database) as connection:
+        frame.to_sql("employee_attrition", connection, index=False, if_exists="replace")
+        connection.executescript(sql_path.read_text(encoding="utf-8"))
+        count = connection.execute(
+            "SELECT COUNT(*) FROM employee_attrition"
+        ).fetchone()[0]
+        assert count == 1470
+
+
+def test_analysis_script_exports_valid_json_tables_and_charts(tmp_path):
+    import json
+    from scripts.analyze_ibm_hr import run_analysis
+
+    summary = run_analysis(DATA, tmp_path)
+    report = json.loads((tmp_path / "attrition_summary.json").read_text(encoding="utf-8"))
+    assert summary["records"] == 1470
+    assert report["records"] == 1470
+    for filename in (
+        "by_department.csv",
+        "by_job_role.csv",
+        "by_overtime.csv",
+        "by_job_satisfaction_code.csv",
+        "by_income_quartile.csv",
+        "attrition_overall.png",
+        "attrition_by_department.png",
+        "attrition_by_income_quartile.png",
+    ):
+        assert (tmp_path / filename).is_file()
+        assert (tmp_path / filename).stat().st_size > 0
