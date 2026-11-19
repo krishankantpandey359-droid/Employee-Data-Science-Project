@@ -44,11 +44,14 @@ def summarize_employee_sample(frame: pd.DataFrame) -> dict:
     numeric = frame[["age", "healthy_eating", "active_lifestyle", "salary"]].apply(
         pd.to_numeric, errors="raise"
     )
+    # Normalize harmless surrounding whitespace so one logical group is not
+    # split into multiple categories (for example, "A" and " A ").
+    group_labels = frame["groups"].astype("string").str.strip()
+    group_counts = group_labels.value_counts(dropna=False).sort_index()
     return {
         "record_count": int(len(frame)),
         "group_counts": {
-            str(key): int(value)
-            for key, value in frame["groups"].value_counts(dropna=False).sort_index().items()
+            str(key): int(value) for key, value in group_counts.items()
         },
         "numeric_summary": numeric.describe(
             percentiles=[0.25, 0.5, 0.75]
