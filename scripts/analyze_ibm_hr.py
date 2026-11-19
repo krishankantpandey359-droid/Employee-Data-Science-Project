@@ -12,10 +12,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-from src.ibm_hr_data import load_ibm_hr_data, summarize_attrition
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+from src.ibm_hr_data import load_ibm_hr_data, summarize_attrition
+
 DEFAULT_DATA = ROOT / "data" / "raw" / "ibm_hr_attrition.csv"
 DEFAULT_OUTPUT = ROOT / "outputs"
 
