@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from src.employee_data import summarize_employee_data, validate_employee_data
+
 DATA_PATH = Path(__file__).resolve().parents[1] / "Employee Dataset.csv"
 EXPECTED_COLUMNS = ["id", "groups", "age", "healthy_eating", "active_lifestyle", "salary"]
 NUMERIC_COLUMNS = ["id", "age", "healthy_eating", "active_lifestyle", "salary"]
@@ -45,17 +47,7 @@ def test_group_labels_are_present():
 
 
 def test_dataset_has_no_exact_duplicate_rows():
-    df = load_data()
-    assert not df.duplicated().any()
-
-
-def test_dataset_is_not_modified_by_loader():
-    before = load_data()
-    after = load_data()
-    pd.testing.assert_frame_equal(before, after)
-
-
-from src.employee_data import validate_employee_data
+    assert not load_data().duplicated().any()
 
 
 def test_validator_accepts_repository_dataset():
@@ -92,3 +84,37 @@ def test_validator_does_not_mutate_input():
     original = df.copy(deep=True)
     validate_employee_data(df)
     pd.testing.assert_frame_equal(df, original)
+
+
+def test_summary_reports_all_measured_fields_and_excludes_id():
+    result = summarize_employee_data(load_data())
+    distribution = result["distribution"]
+    assert distribution.index.tolist() == [
+        "age", "healthy_eating", "active_lifestyle", "salary"
+    ]
+    assert distribution.loc["age", "count"] == 50
+    assert distribution.loc["age", "mean"] == pytest.approx(31.88)
+    assert distribution.loc["salary", "median"] > 0
+
+
+def test_group_summary_is_complete_and_shares_sum_to_100():
+    result = summarize_employee_data(load_data())
+    grouped = result["group_summary"]
+    assert set(grouped.index) == {"A", "O", "AB", "B"}
+    assert grouped["record_count"].sum() == 50
+    assert grouped["record_share_pct"].sum() == pytest.approx(100.0)
+    assert (grouped["record_count"] > 0).all()
+
+
+def test_summary_does_not_mutate_input():
+    df = load_data()
+    original = df.copy(deep=True)
+    summarize_employee_data(df)
+    pd.testing.assert_frame_equal(df, original)
+
+
+def test_summary_rejects_invalid_input():
+    df = load_data()
+    df.loc[0, "age"] = 0
+    with pytest.raises(ValueError, match="Age"):
+        summarize_employee_data(df)
