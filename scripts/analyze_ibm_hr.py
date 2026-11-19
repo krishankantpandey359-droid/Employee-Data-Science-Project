@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 
 import matplotlib
 matplotlib.use("Agg")
@@ -14,6 +15,7 @@ import seaborn as sns
 from src.ibm_hr_data import load_ibm_hr_data, summarize_attrition
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 DEFAULT_DATA = ROOT / "data" / "raw" / "ibm_hr_attrition.csv"
 DEFAULT_OUTPUT = ROOT / "outputs"
 
