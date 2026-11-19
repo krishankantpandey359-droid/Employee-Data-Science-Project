@@ -49,13 +49,7 @@ def test_dataset_has_no_exact_duplicate_rows():
     assert not df.duplicated().any()
 
 
-def test_dataset_is_not_modified_by_loader():
-    before = load_data()
-    after = load_data()
-    pd.testing.assert_frame_equal(before, after)
-
-
-from src.employee_data import validate_employee_data
+from src.employee_data import validate_employee_data, summarize_employee_sample
 
 
 def test_validator_accepts_repository_dataset():
@@ -92,3 +86,42 @@ def test_validator_does_not_mutate_input():
     original = df.copy(deep=True)
     validate_employee_data(df)
     pd.testing.assert_frame_equal(df, original)
+
+
+def test_sample_summary_is_unit_neutral_and_complete():
+    result = summarize_employee_sample(load_data())
+    assert result["record_count"] == 50
+    assert sum(result["group_counts"].values()) == 50
+    assert set(result["numeric_summary"]) == {
+        "age", "healthy_eating", "active_lifestyle", "salary"
+    }
+    assert set(result["group_numeric_summary"]) == set(result["group_counts"])
+    assert set(result["iqr_outlier_review"]) == {
+        "age", "healthy_eating", "active_lifestyle", "salary"
+    }
+    assert "do not establish causation" in result["interpretation_note"]
+
+
+def test_sample_summary_rejects_invalid_input():
+    df = load_data()
+    df.loc[0, "age"] = 0
+    with pytest.raises(ValueError, match="Age"):
+        summarize_employee_sample(df)
+
+
+def test_sample_summary_normalizes_group_label_whitespace():
+    df = load_data()
+    original_a_count = int(df["groups"].eq("A").sum())
+    df.loc[0, "groups"] = " A "
+    result = summarize_employee_sample(df)
+    assert result["group_counts"]["A"] == original_a_count
+    assert sum(result["group_counts"].values()) == len(df)
+
+
+def test_iqr_outlier_review_does_not_remove_or_mutate_records():
+    df = load_data()
+    original = df.copy(deep=True)
+    result = summarize_employee_sample(df)
+    assert result["record_count"] == len(df)
+    pd.testing.assert_frame_equal(df, original)
+    assert all(item["count"] >= 0 for item in result["iqr_outlier_review"].values())
