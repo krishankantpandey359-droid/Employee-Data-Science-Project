@@ -31,7 +31,8 @@ The original data source, sampling method, salary unit, group definitions and sc
 6. Plot distributions for measured numeric fields, excluding the ID.
 7. Visualise the categorical group field.
 8. Examine correlations among measured numeric fields.
-9. Summarise the sample and document limitations.
+9. Compare descriptive averages and record counts across the four supplied group labels.
+10. Summarise the sample and document limitations.
 
 ## Main sample observations
 
