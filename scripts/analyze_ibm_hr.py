@@ -33,7 +33,7 @@ def run_analysis(data_path: str | Path = DEFAULT_DATA,
     }
     serializable["numeric_summary"] = summary["numeric_summary"].to_dict()
     (output_dir / "attrition_summary.json").write_text(
-        json.dumps(serializable, indent=2, ensure_ascii=False, default=str) + "\\n",
+        json.dumps(serializable, indent=2, ensure_ascii=False, default=str) + "\n",
         encoding="utf-8",
     )
 
