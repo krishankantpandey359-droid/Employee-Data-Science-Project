@@ -9,7 +9,7 @@
 - Upstream dataset terms stated in IBM README: Open Database License (ODbL) for the database and Database Contents License (DbCL) for the contents.
 - Upstream project code license: Apache License 2.0. This is separate from the dataset terms.
 - Upstream repository is archived. The dataset is a static teaching/example dataset.
-- Dataset type: fictional/synthetic HR analytics records. Do not describe these rows as real employees or as records from a real employer.
+- Dataset type: static public HR analytics benchmark/example data. The upstream README does not establish whether rows correspond to real, anonymized, or simulated individuals. Do not claim these records represent a specific or current employer.
 - Imported file: `data/raw/ibm_hr_attrition.csv`
 - Imported row count: 1470
 - Imported column count: 35
