@@ -7,7 +7,7 @@ This repository contains two separate analysis tracks:
 1. Primary: IBM HR Analytics Attrition benchmark, with 1,470 records and 35 fields. This is the main HR analytics project.
 2. Supplementary: the original 50-record employee-style sample and its beginner EDA notebook. This sample is retained unchanged as a separate exercise.
 
-The IBM benchmark is a static teaching dataset. It is not a live company dataset and does not represent a current workforce.
+The IBM benchmark is a static public example dataset. It is not a live company dataset and does not represent a current workforce.
 
 ## Primary project: IBM HR Attrition benchmark
 
@@ -60,13 +60,24 @@ sqlite3 employee_attrition.db
 
 Inside SQLite:
 
-```sql
-.mode csv
-.import --skip 1 data/raw/ibm_hr_attrition.csv employee_attrition
-.read sql/employee_attrition_analysis.sql
+Create the database table with Python:
+
+```python
+import sqlite3
+import pandas as pd
+
+frame = pd.read_csv("data/raw/ibm_hr_attrition.csv")
+with sqlite3.connect("employee_attrition.db") as connection:
+    frame.to_sql("employee_attrition", connection, if_exists="replace", index=False)
 ```
 
-If your SQLite version does not support `--skip 1`, import the CSV with a CSV-aware tool or a short Python import script. Confirm that the resulting table has 1,470 records and 35 columns before running the queries.
+Then execute the SQL file:
+
+```bash
+sqlite3 employee_attrition.db < sql/employee_attrition_analysis.sql
+```
+
+Confirm the imported table has 1,470 records and 35 columns before interpreting query results.
 
 ## Supplementary project: original 50-row employee-style sample
 
@@ -95,7 +106,7 @@ The GitHub Actions workflow runs both datasets' tests, executes both notebooks, 
 
 The IBM source repository's README lists separate Open Database License (ODbL) and Database Contents License (DbCL) terms for the dataset. Its Apache-2.0 code license is separate from the data terms. Review the upstream terms before redistributing the dataset or derived database. See [docs/DATASET_PROVENANCE.md](docs/DATASET_PROVENANCE.md).
 
-The source data is synthetic/static benchmark data. Results describe this dataset only. They do not estimate a current employer's attrition rate. Satisfaction code labels and monetary units are not fully documented. Do not invent their meanings. Do not use these results or any future model to make real hiring, promotion, compensation, or termination decisions.
+The source is a static public benchmark/example dataset. The upstream documentation does not establish that it represents a current or identifiable real-world workforce. Results describe this dataset only. They do not estimate a current employer's attrition rate. Satisfaction code labels and monetary units are not fully documented. Do not invent their meanings. Do not use these results or any future model to make real hiring, promotion, compensation, or termination decisions.
 
 ## Author
 
