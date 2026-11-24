@@ -120,4 +120,4 @@ Srishti Pandey, MCA Data Science
 
 ## Latest GitHub Actions validation
 
-Latest successful main-branch workflow run checked on 24 November 2026: [Open workflow run #45314451691](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/45314451691). This link tracks workflow status; it is separate from the historical findings artifact above.
+Latest successful main-branch workflow run checked on 24 November 2026: [Open workflow run #45456631915](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/45456631915). This run verifies the current README and configured project checks; it is separate from the historical findings artifact above.
