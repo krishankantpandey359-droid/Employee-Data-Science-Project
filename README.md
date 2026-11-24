@@ -117,3 +117,7 @@ The source is a static public benchmark/example dataset. The upstream documentat
 ## Author
 
 Srishti Pandey, MCA Data Science
+
+## Latest GitHub Actions validation
+
+Latest successful main-branch workflow run checked on 24 November 2026. [Open workflow run #44581770510](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/44581770510). The run validates only the checks configured in this repository's workflow.
