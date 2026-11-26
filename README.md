@@ -32,7 +32,7 @@ These are descriptive comparisons. They do not demonstrate causes or justify dec
 
 The CI-verified descriptive results are recorded in [reports/IBM_HR_Attrition_Findings.md](reports/IBM_HR_Attrition_Findings.md). They include attrition share by department, overtime, and sample-defined income quartile, with counts and interpretation limits.
 
-Latest successful main-branch workflow run verified on 26 November 2026: [GitHub Actions run #45799982238](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/45799982238). This confirms the configured automated checks, not every manual or deployment feature.
+The historical IBM HR findings artifact is available from the [19 November 2026 execution run](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/44581146384). This is an archived historical analysis artifact, not the latest CI run.
 
 ### Primary analysis files
 
@@ -120,4 +120,4 @@ Srishti Pandey, MCA Data Science
 
 ## Latest GitHub Actions validation
 
-Latest successful main-branch workflow run checked on 24 November 2026: [Open workflow run #45798999167](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/45798999167). This run verifies the current README and configured project checks; it is separate from the historical findings artifact above.
+Latest successful main-branch workflow run verified on 26 November 2026: [GitHub Actions run #45799982238](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/45799982238). This confirms the configured automated checks, not every manual or deployment feature.
