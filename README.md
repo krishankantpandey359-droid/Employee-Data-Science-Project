@@ -32,7 +32,7 @@ These are descriptive comparisons. They do not demonstrate causes or justify dec
 
 The CI-verified descriptive results are recorded in [reports/IBM_HR_Attrition_Findings.md](reports/IBM_HR_Attrition_Findings.md). They include attrition share by department, overtime, and sample-defined income quartile, with counts and interpretation limits.
 
-The historical IBM HR findings artifact is available from the [19 November 2026 execution run](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/44581146384). This is an archived historical analysis artifact, not the latest CI run.
+Latest successful main-branch workflow run verified on 26 November 2026: [GitHub Actions run #45799982238](https://github.com/krishankantpandey359-droid/Employee-Data-Science-Project/actions/runs/45799982238). This confirms the configured automated checks, not every manual or deployment feature.
 
 ### Primary analysis files
 
